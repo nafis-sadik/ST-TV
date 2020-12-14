@@ -4,29 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-</head>
-<body>
-    <video id=example-video width=960 height=540 class="" controls></video>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.0.0/video.min.js" integrity="sha512-LiILFcpZ9QKSH41UkK59Zag/7enHzqjr5lO2M0wGqGn8W19A/x2rV3iufAHkEtrln+Bt+Zv1U6NlLIp+lEqeWQ==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js" integrity="sha512-R1+Pgd+uyqnjx07LGUmp85iW8MSL1iLR2ICPysFAt8Y4gub8C42B+aNG2ddOfCWcDDn1JPWZO4eby4+291xP9g==" crossorigin="anonymous"></script>
+    <script src="/lib/jquery.min.js"></script>
+
+    <script src="/lib/VideoJS/video.min.js"></script>
+    <script src="/lib/VideoJS/videojs-contrib-hls.min.js"></script>
+
+    <!-- Video.js base CSS -->
+    <link href="https://unpkg.com/video.js@7/dist/video-js.min.css" rel="stylesheet">
+
+    <!-- City -->
     <link href="https://unpkg.com/@videojs/themes@1/dist/city/index.css" rel="stylesheet">
-    <script>
-        var ChannelLib = {
-            ABC_23_KERO: 'https://content.uplynk.com/channel/ff809e6d9ec34109abfb333f0d4444b5.m3u8',
-            ABN_KIDS_TV_3: 'https://moiptvhls-i.akamaihd.net/hls/live/652318/secure/master.m3u8'
-        };
-        var player = videojs('example-video');
-        $('document').ready(() => {
-            SetChannelFeed(ChannelLib.ABN_KIDS_TV_3);
-        });
-        var SetChannelFeed = (channelFeedUrl) => {
-            player.src({
-                src: channelFeedUrl,
-                type: 'application/x-mpegURL'
-            });
-            player.play();
-        }
-    </script>
+
+    <!-- Fantasy -->
+    <link href="https://unpkg.com/@videojs/themes@1/dist/fantasy/index.css" rel="stylesheet">
+
+    <!-- Forest -->
+    <link href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css" rel="stylesheet">
+
+    <!-- Sea -->
+    <link href="https://unpkg.com/@videojs/themes@1/dist/sea/index.css" rel="stylesheet">
+</head>
+<body>    
+    <section id="MediaPlayerSection">
+        <video id=MediaPlayer class="video-js vjs-theme-city" controls muted poster=""></video>
+    </section>
+    <div>
+        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    </div>
+    <script src="/main.js"></script>
 </body>
 </html>
