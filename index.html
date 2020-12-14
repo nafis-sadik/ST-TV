@@ -13,11 +13,11 @@
     <script>
         var ChannelLib = {
             ABC_23_KERO: 'https://content.uplynk.com/channel/ff809e6d9ec34109abfb333f0d4444b5.m3u8',
-            Investment_Pitch_30A: 'http://www.30a-tv.com/InvPit.m3u8?fluxustv.m3u8'
+            ABN_KIDS_TV_3: 'https://moiptvhls-i.akamaihd.net/hls/live/652318/secure/master.m3u8'
         };
         var player = videojs('example-video');
         $('document').ready(() => {
-            SetChannelFeed(ChannelLib.Investment_Pitch_30A);
+            SetChannelFeed(ChannelLib.ABN_KIDS_TV_3);
         });
         var SetChannelFeed = (channelFeedUrl) => {
             player.src({
