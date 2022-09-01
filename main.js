@@ -5,6 +5,7 @@ var unknownOrigins = [];
 var catagory = [];
 var language = [];
 var PlayList = [];
+var PlayListDict = {};
 var Countries = [
   {id :'AR', title: 'Argentina'},
   {id: 'HN', title: 'Honduras'},
@@ -141,31 +142,31 @@ player.aspectRatio('16:9');
 player.responsive(true);
 
 $('document').ready(() => {
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/business.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/business.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/auto.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/auto.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/entertainment.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/entertainment.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/fashion.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/fashion.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/news.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/news.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/music.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/music.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/religious.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/religious.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/sport.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/sport.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/documentary.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/documentary.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/comedy.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/comedy.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/history.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/history.m3u');
 
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/countries/bd.m3u');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/countries/bd.m3u');
 
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/index.country.m3u');
+  loadDataFromPlaylist('https://iptv-org.github.io/iptv/index.country.m3u');
 
   // loadDataFromPlaylist('https://iptv-org.github.io/iptv/index.category.m3u');
 
@@ -203,7 +204,7 @@ const loadDataFromPlaylist = (url) => {
     
     data.segments.forEach((item) => {
       PlayList.push(item);
-
+      PlayListDict[item.inf.groupTitle] = "";
       if(!language.includes(item.inf.tvgLanguage)){
         language.push(item.inf.tvgLanguage);
         if(item.inf.tvgLanguage != 'English')
@@ -224,6 +225,8 @@ const loadDataFromPlaylist = (url) => {
         }
       }
     })
+
+    console.log(PlayListDict)
 
     $('#Countries').empty();
     knownOrigins.forEach((country) => {
@@ -248,6 +251,9 @@ let loadChannelsOnUI = (ln, cn, cat) => {
   $('#ChannelContainer').empty();
   if(ln != undefined){
     PlayList.forEach((item) => {
+      if(!item.inf.hasOwnProperty('tvgLanguage')){
+        return;
+      }
       if(item.inf.tvgLanguage.toLowerCase().trim() == ln.toLowerCase().trim()){
         let template = 
           '<div class="card channel" style="width: 18rem;">'
