@@ -1,141 +1,7 @@
 import M3U8FileParser from 'm3u8-file-parser'
 
-var knownOrigins = [];
-var unknownOrigins = [];
-var catagory = [];
-var language = [];
+
 var PlayList = [];
-var PlayListDict = {};
-var Countries = [
-  {id :'AR', title: 'Argentina'},
-  {id: 'HN', title: 'Honduras'},
-  {id: 'PE', title: 'Peru'},
-  {id: 'AU', title: 'Australia'},
-  {id: 'HK', title: 'Hong Kong'},
-  {id: 'PH', title: 'Philippines'},
-  {id: 'AT', title: 'Austria'},
-  {id: 'HU', title: 'Hungary'},
-  {id: 'PL', title: 'Poland'},
-  {id: 'BS', title: 'Bahamas'},
-  {id: 'IS', title: 'Iceland'},
-  {id: 'PT', title: 'Portugal'},
-  {id: 'BH', title: 'Bahrain'},
-  {id: 'IN', title: 'India'},
-  {id: 'PR', title: 'Puerto Rico'},
-  {id: 'BD', title: 'Bangladesh'},
-  {id: 'ID', title: 'Indonesia'},
-  {id: 'QA', title: 'Qatar'},
-  {id: 'BB', title: 'Barbados'},
-  {id: 'IR', title: 'Iran'},
-  {id: 'KR', title: 'Republic of Korea'},
-  {id: 'BE', title: 'Belgium'},
-  {id: 'RO', title: 'Romania'},
-  {id: 'BZ', title: 'Belize'},
-  {id: 'IE', title: 'Ireland'},
-  {id: 'RU', title: 'Russian Federation'},
-  {id: 'BJ', title: 'Benin'},
-  {id: 'IL', title: 'Israel'},
-  {id: 'ARAB', title: 'Saudi Arabia'},
-  {id: 'SA', title: 'Saudi Arabia'},
-  {id: 'BM', title: 'Bermuda'},
-  {id: 'IT', title: 'Italy'},
-  {id: 'SN', title: 'Senegal'},
-  {id: 'BO', title: 'Bolivia'},
-  {id: 'JM', title: 'Jamaica'},
-  {id: 'SC', title: 'Seychelles'},
-  {id: 'BR', title: 'Brazil'},
-  {id: 'JP', title: 'Japan'},
-  {id: 'SL', title: 'Sierra Leone'},
-  {id: 'BG', title: 'Bulgaria'},
-  {id: 'JO', title: 'Jordan'},
-  {id: 'SG', title: 'Singapore'},
-  {id: 'BF', title: 'Burkina Faso'},
-  {id: 'KE', title: 'Kenya'},
-  {id: 'SK', title: 'Slovakia'},
-  {id: 'CL', title: 'Chile'},
-  {id: 'KW', title: 'Kuwait'},
-  {id: 'SI', title: 'Slovenia'},
-  {id: 'CN', title: 'China'},
-  {id: 'LV', title: 'Latvia'},
-  {id: 'ZA', title: 'South Africa'},
-  {id: 'CO', title: 'Colombia'},
-  {id: 'LB', title: 'Lebanon'},
-  {id: 'ES', title: 'Spain'},
-  {id: 'CR', title: 'Costa Rica'},
-  {id: 'LR', title: 'Liberia'},
-  {id: 'LK', title: 'Sri Lanka'},
-  {id: 'CI', title: "Côte D' Ivoire"},
-  {id: 'LY', title: 'Libya'},
-  {id: 'SD', title: 'Sudan'},
-  {id: 'HR', title: 'Croatia'},
-  {id: 'LI', title: 'Liechtenstein'},
-  {id: 'SR', title: 'Surinam'},
-  {id: 'CU', title: 'Cuba'},
-  {id: 'LT', title: 'Lithuania'},
-  {id: 'SE', title: 'Sweden'},
-  {id: 'CY', title: 'Cyprus'},
-  {id: 'LU', title: 'Luxembourg'},
-  {id: 'CH', title: 'Switzerland'},
-  {id: 'CZ', title: 'Czech Republic'},
-  {id: 'MW', title: 'Malawi'},
-  {id: 'SY', title: 'Syria'},
-  {id: 'DK', title: 'Denmark'},
-  {id: 'MY', title: 'Malaysia'},
-  {id: 'SY', title: 'Syrian Arab Republic'},
-  {id: 'DO', title: 'Dominican Republic'},
-  {id: 'ML', title: 'Mali'},
-  {id: 'TW', title: 'Taiwan'},
-  {id: 'EC', title: 'Ecuador'},
-  {id: 'MT', title: 'Malta'},
-  {id: 'TZ', title: 'Tanzania'},
-  {id: 'EG', title: 'Egypt'},
-  {id: 'MR', title: 'Mauritania'},
-  {id: 'TH', title: 'Thailand'},
-  {id: 'MU', title: 'El Salvador'},
-  {id: 'MY', title: 'Mauritius'},
-  {id: 'TT', title: 'Trinidad and Tobago'},
-  {id: 'EE', title: 'Estonia'},
-  {id: 'MX', title: 'Mexico'},
-  {id: 'TN', title: 'Tunisia'},
-  {id: 'ET', title: 'Ethiopia'},
-  {id: 'MA', title: 'Morocco'},
-  {id: 'TR', title: 'Turkey'},
-  {id: 'FI', title: 'Finland'},
-  {id: 'NL', title: 'Netherlands'},
-  {id: 'UG', title: 'Uganda'},
-  {id: 'FR', title: 'France'},
-  {id: 'NZ', title: 'New Zealand'},
-  {id: 'UA', title: 'Ukraine'},
-  {id: 'GM', title: 'Gambia'},
-  {id: 'NI', title: 'Nicaragua'},
-  {id: 'AE', title: 'United Arab Emirates'},
-  {id: 'DE', title: 'Germany'},
-  {id: 'NE', title: 'Niger'},
-  {id: 'UY', title: 'Uruguay'},
-  {id: 'GH', title: 'Ghana'},
-  {id: 'NG', title: 'Nigeria'},
-  {id: 'VE', title: 'Venezuela'},
-  {id: 'UK', title: 'Great Britain'},
-  {id: 'NO', title: 'Norway'},
-  {id: 'VN', title: 'Vietnam'},
-  {id: 'GR', title: 'Greece'},
-  {id: 'OM', title: 'Oman'},
-  {id: 'YE', title: 'Yemen'},
-  {id: 'GT', title: 'Guatemala'},
-  {id: 'PK', title: 'Pakistan'},
-  {id: 'ZM', title: 'Zambia'},
-  {id: 'GN', title: 'Guinea'},
-  {id: 'PA', title: 'Panama'},
-  {id: 'ZW', title: 'Zimbabwe'},
-  {id: 'GY', title: 'Guyana'},
-  {id: 'PY', title: 'Paraguay'},
-  {id: 'EMEA', title: 'Europe, the Middle East and Africa'},
-  {id: 'US', title: 'United States Of America'},
-  {id: 'MN', title: 'Mongolian'},
-  {id: 'EUR', title: 'Europe'},
-  {id: 'KZ', title: 'Kazakhstan'},
-  {id: 'SAS', title: 'SCANDINAVIAN'}
-];
 
 var player = videojs('MediaPlayer');
 player.aspectRatio('16:9');
@@ -158,21 +24,17 @@ $('document').ready(() => {
 
   // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/sport.m3u');
 
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/documentary.m3u');
+  GeneratePlaylist([
+    { source: 'https://iptv-org.github.io/iptv/categories/documentary.m3u', classification: 'cat'},
+    { source: 'https://iptv-org.github.io/iptv/countries/bd.m3u', classification: 'cn'},
+    { source: 'https://iptv-org.github.io/iptv/index.country.m3u', classification: 'cn'},
+    { source: 'https://iptv-org.github.io/iptv/index.category.m3u', classification: 'cat'},
+    { source: 'https://iptv-org.github.io/iptv/index.language.m3u', classification: 'ln'}
+  ]);
 
   // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/comedy.m3u');
 
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/history.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/countries/bd.m3u');
-
-  loadDataFromPlaylist('https://iptv-org.github.io/iptv/index.country.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/index.category.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/index.language.m3u');
-
-  $('#LoadingScreen').addClass('loading');
+  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/history.m3u', '.');
   
   $('#MediaPlayer').addClass('vjs-theme-city');
 });
@@ -195,53 +57,89 @@ const SetChannelFeed = (channelFeedUrl, posterUrl, channelTitle) => {
   $('.logo').attr('src', posterUrl.toString());
 }
 
-const loadDataFromPlaylist = (url) => {
-  $.get(url, (data) => {
-    let reader = new M3U8FileParser();
-    reader.result.isExtendedM3U = true;
-    reader.read(data);
-    data = reader.getResult();
-    
-    data.segments.forEach((item) => {
-      PlayList.push(item);
-      PlayListDict[item.inf.groupTitle] = "";
-      if(!language.includes(item.inf.tvgLanguage)){
-        language.push(item.inf.tvgLanguage);
-        if(item.inf.tvgLanguage != 'English')
-          $('#Languages').append('<li><a class="dropdown-item" href="#">' + item.inf.tvgLanguage + '</a></li>');
-      }
+var SysPlaylist = {
+  Categories: [],
+  Countries: [],
+  Language: [],
+  PlayList: []
+};
 
-      if(!catagory.includes(item.inf.groupTitle)){
-        catagory.push(item.inf.groupTitle);
-        $('#Categories').append('<li><a class="dropdown-item" href="#">' + item.inf.groupTitle + '</a></li>');
-      }
+const GeneratePlaylist = (sources) => {
+  sources.forEach(element => {
+     loadDataFromPlaylist(element.source, element.classification);
+  });
+  
+  init();
+}
 
-      if(!knownOrigins.find((country) => country.id == item.inf.tvgCountry) && !unknownOrigins.find((country) => country.id == item.inf.tvgCountry)){
-        let countryObj = Countries.find((country) => country.id == item.inf.tvgCountry);
-        if(countryObj == undefined){
-          unknownOrigins.push({id: item.inf.tvgCountry, title: 'Unknown Country Name'});
-        }else{
-          knownOrigins.push({id: countryObj.id, title: countryObj.title});
+const loadDataFromPlaylist = (url, category) => {
+  $.ajax({
+    url: url,
+    method: 'GET',
+    async: false,
+    success: (data) => {
+      let reader = new M3U8FileParser();
+      reader.result.isExtendedM3U = true;
+      reader.read(data);
+      data = reader.getResult();
+  
+      data.segments.forEach((item) => {
+        if(item.inf.groupTitle.includes(';')){
+          item.inf.groupTitle = item.inf.groupTitle.replaceAll(';', ' / ');
         }
-      }
-    })
-
-    console.log(PlayListDict)
-
-    $('#Countries').empty();
-    knownOrigins.forEach((country) => {
-      $('#Countries').append('<li><a class="dropdown-item" href="#">' + country.title + ' (' + country.id + ')</a></li>');
-    });
-
-    unknownOrigins.forEach((country) => {
-      $('#Countries').append('<li><a class="dropdown-item" href="#">' + country.title + ' (' + country.id + ')</a></li>');
-    });
-
-    loadChannelsOnUI('English', undefined, undefined);
-
-    $('#LoadingScreen').removeClass('loading');
+  
+        // Country is selected
+        if(category == 'cn'){
+          // If country name is not previouslly registered, register now
+          if(!SysPlaylist.Countries.includes(item.inf.groupTitle)){
+            SysPlaylist.Countries.push(item.inf.groupTitle);
+          }
+        }
+  
+        // Category is selected
+        else if(category == 'cat'){
+          // If category name is not previouslly registered, register now
+          if(!SysPlaylist.Categories.includes(item.inf.groupTitle)){
+            SysPlaylist.Categories.push(item.inf.groupTitle);
+          }
+        }
+  
+        // Language is selected
+        else if(category == 'ln'){
+          // If category name is not previouslly registered, register now
+          if(!SysPlaylist.Language.includes(item.inf.groupTitle)){
+            SysPlaylist.Language.push(item.inf.groupTitle);
+          }
+        }
+  
+        else{
+          console.log('Playlist type not selected');
+          console.log(item.inf.groupTitle);
+        }
+  
+        // If channel not previously registered, register now
+        if(!SysPlaylist.PlayList.includes(item.inf)){
+          SysPlaylist.PlayList.push(item.inf);
+        }
+      });
+      // loadChannelsOnUI('English', undefined, undefined);
+    }
   });
 }
+
+const init = () => {
+  SysPlaylist.Countries.forEach((country) => {
+    $('#Countries').append('<li><a class="dropdown-item" href="#">' + country + '</a></li>');
+  });
+
+  SysPlaylist.Categories.forEach((category) => {
+    $('#Categories').append('<li><a class="dropdown-item" href="#">' + category + '</a></li>');
+  });
+
+  $('#LoadingScreen').removeClass('loading');
+}
+
+console.log(SysPlaylist);
 
 $('#Play').click(() => {
   SetChannelFeed(PlayList[Math.floor(Math.random() * (PlayList.length-1))].url, 'http://localhost:3000/img/pexels-lisa-1444416.jpg');
@@ -250,10 +148,7 @@ $('#Play').click(() => {
 let loadChannelsOnUI = (ln, cn, cat) => {
   $('#ChannelContainer').empty();
   if(ln != undefined){
-    PlayList.forEach((item) => {
-      if(!item.inf.hasOwnProperty('tvgLanguage')){
-        return;
-      }
+    SysPlaylist.Language.forEach((item) => {
       if(item.inf.tvgLanguage.toLowerCase().trim() == ln.toLowerCase().trim()){
         let template = 
           '<div class="card channel" style="width: 18rem;">'
