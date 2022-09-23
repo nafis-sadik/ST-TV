@@ -223,4 +223,4 @@ $(document).on('click', '#Categories li a', function() {
 
 $(document).on('click', '#ChannelContainer .card', function(item) {
   SetChannelFeed($($($($(item)[0].currentTarget).children()[1]).children()[4]).val(), $($($($(item)[0].currentTarget).children()[1]).children()[5]).val(), $($($($(item)[0].currentTarget).children()[1]).children()[6]).val());
-});
+}); 
