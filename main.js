@@ -25,11 +25,11 @@ $('document').ready(() => {
   // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/sport.m3u');
 
   GeneratePlaylist([
-    { source: 'https://iptv-org.github.io/iptv/categories/documentary.m3u', classification: 'cat'},
-    { source: 'https://iptv-org.github.io/iptv/countries/bd.m3u', classification: 'cn'},
-    { source: 'https://iptv-org.github.io/iptv/index.country.m3u', classification: 'cn'},
-    { source: 'https://iptv-org.github.io/iptv/index.category.m3u', classification: 'cat'},
-    { source: 'https://iptv-org.github.io/iptv/index.language.m3u', classification: 'ln'}
+    { source: 'https://iptv-org.github.io/iptv/categories/documentary.m3u', classification: 'cat', specificName: '' },
+    { source: 'https://iptv-org.github.io/iptv/countries/bd.m3u', classification: 'cn', specificName: 'Bangladesh' },
+    { source: 'https://iptv-org.github.io/iptv/index.country.m3u', classification: 'cn', specificName: '' },
+    { source: 'https://iptv-org.github.io/iptv/index.category.m3u', classification: 'cat', specificName: '' },
+    { source: 'https://iptv-org.github.io/iptv/index.language.m3u', classification: 'ln', specificName: '' }
   ]);
 
   // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/comedy.m3u');
@@ -66,13 +66,15 @@ var SysPlaylist = {
 
 const GeneratePlaylist = (sources) => {
   sources.forEach(element => {
-     loadDataFromPlaylist(element.source, element.classification);
+     loadDataFromPlaylist(element.source, element.classification, element.specificName);
   });
   
   init();
+
+  console.log(SysPlaylist)
 }
 
-const loadDataFromPlaylist = (url, category) => {
+const loadDataFromPlaylist = (url, category, specificName) => {
   $.ajax({
     url: url,
     method: 'GET',
@@ -82,8 +84,8 @@ const loadDataFromPlaylist = (url, category) => {
       reader.result.isExtendedM3U = true;
       reader.read(data);
       data = reader.getResult();
-  
       data.segments.forEach((item) => {
+        // Handling special characters
         if(item.inf.groupTitle.includes(';')){
           item.inf.groupTitle = item.inf.groupTitle.replaceAll(';', ' / ');
         }
@@ -91,27 +93,43 @@ const loadDataFromPlaylist = (url, category) => {
         // Country is selected
         if(category == 'cn'){
           // If country name is not previouslly registered, register now
-          if(!SysPlaylist.Countries.includes(item.inf.groupTitle)){
-            SysPlaylist.Countries.push(item.inf.groupTitle);
+          if(specificName == ''){
+            if(!SysPlaylist.Countries.includes(item.inf.groupTitle)){
+              SysPlaylist.Countries.push(item.inf.groupTitle);
+            }
+          }else{
+            if(!SysPlaylist.Countries.includes(specificName)){
+              SysPlaylist.Countries.push(specificName);
+            }
           }
         }
   
         // Category is selected
         else if(category == 'cat'){
           // If category name is not previouslly registered, register now
-          if(!SysPlaylist.Categories.includes(item.inf.groupTitle)){
-            SysPlaylist.Categories.push(item.inf.groupTitle);
+          if(specificName == ''){
+            if(!SysPlaylist.Categories.includes(item.inf.groupTitle)){
+              SysPlaylist.Categories.push(item.inf.groupTitle);
+            }
+          }else{
+            if(!SysPlaylist.Categories.includes(specificName)){
+              SysPlaylist.Categories.push(specificName);
+            }
           }
         }
-  
         // Language is selected
         else if(category == 'ln'){
           // If category name is not previouslly registered, register now
-          if(!SysPlaylist.Language.includes(item.inf.groupTitle)){
-            SysPlaylist.Language.push(item.inf.groupTitle);
+          if(specificName == ''){
+            if(!SysPlaylist.Language.includes(item.inf.groupTitle)){
+              SysPlaylist.Language.push(item.inf.groupTitle);
+            }
+          }else{
+            if(!SysPlaylist.Language.includes(specificName)){
+              SysPlaylist.Language.push(specificName);
+            }
           }
-        }
-  
+        }  
         else{
           console.log('Playlist type not selected');
           console.log(item.inf.groupTitle);
@@ -122,7 +140,6 @@ const loadDataFromPlaylist = (url, category) => {
           SysPlaylist.PlayList.push(item.inf);
         }
       });
-      // loadChannelsOnUI('English', undefined, undefined);
     }
   });
 }
@@ -136,10 +153,12 @@ const init = () => {
     $('#Categories').append('<li><a class="dropdown-item" href="#">' + category + '</a></li>');
   });
 
-  $('#LoadingScreen').removeClass('loading');
+  SysPlaylist.Language.forEach((category) => {
+    $('#Languages').append('<li><a class="dropdown-item" href="#">' + category + '</a></li>');
+  });
+  
+  $('#LoadingScreen').removeClass('d-none');
 }
-
-console.log(SysPlaylist);
 
 $('#Play').click(() => {
   SetChannelFeed(PlayList[Math.floor(Math.random() * (PlayList.length-1))].url, 'http://localhost:3000/img/pexels-lisa-1444416.jpg');
@@ -209,16 +228,16 @@ let loadChannelsOnUI = (ln, cn, cat) => {
   }
 }
 
-$(document).on('click', '#Languages li a', function() {
-  loadChannelsOnUI($(this).text(), undefined, undefined);
+$(document).on('click', '#Languages li a', (elem) => {
+  loadChannelsOnUI($(elem.target).html(), undefined, undefined);
 });
 
-$(document).on('click', '#Countries li a', function() {
-  loadChannelsOnUI(undefined, $(this).text().split('(')[1].split(')')[0], undefined);
+$(document).on('click', '#Countries li a', (elem) => {
+  loadChannelsOnUI(undefined, $(elem.target).html(), undefined);
 });
 
-$(document).on('click', '#Categories li a', function() {
-  loadChannelsOnUI(undefined, undefined, $(this).text());
+$(document).on('click', '#Categories li a', (elem) => {
+  loadChannelsOnUI(undefined, undefined, $(elem.target).html());
 });
 
 $(document).on('click', '#ChannelContainer .card', function(item) {
