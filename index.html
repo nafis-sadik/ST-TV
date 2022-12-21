@@ -1,104 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blaze TV</title>
-    <script src="./lib/jquery.min.js"></script>
-
-    <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
-
-    <!-- Video.js base CSS -->
-    <link href="https://vjs.zencdn.net/7.10.2/video-js.min.css" rel="stylesheet">
-
-    <!-- Themes -->
-    <link href="./lib/VideoJSThemes/VideoJS-Theme-City.css" rel="stylesheet">
-    <link href="./lib/VideoJSThemes/VideoJS-Theme-Fantasy.css" rel="stylesheet">
-    <link href="./lib/VideoJSThemes/VideoJS-Theme-Forest.css" rel="stylesheet">
-    <link href="./lib/VideoJSThemes/VideoJS-Theme-Sea.css" rel="stylesheet">
-
-    <!--bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <link href="./style.css" rel="stylesheet">
-  </head>
-  <body>
-    <div id="LoadingScreen" class="loading">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin:auto;background:#fff;display:block;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-        <defs>
-          <mask id="ldio-z65geuxdaz-mask">
-            <rect x="15" y="15" width="70" height="70" fill="white"></rect>
-          </mask>
-        </defs>
-        <rect x="15" y="15" width="70" height="70" fill="#e90c59"></rect>
-        <g mask="url(#ldio-z65geuxdaz-mask)">
-          <rect x="-100" y="-250" width="300" height="300" rx="90" ry="90" fill="#a9f6ff" opacity="0.4">
-            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" values="0 50 -100;90 50 -100" keyTimes="0;1"></animateTransform>
-          </rect>
-        
-          <rect x="-100" y="-260" width="300" height="300" rx="95" ry="95" fill="#00e6ff" opacity="0.4">
-            <animateTransform attributeName="transform" type="rotate" dur="1.5151515151515151s" repeatCount="indefinite" values="0 50 -110;90 50 -110" keyTimes="0;1"></animateTransform>
-          </rect>
-        
-          <rect x="-100" y="-270" width="300" height="300" rx="100" ry="100" fill="#0be7ff" opacity="0.4">
-            <animateTransform attributeName="transform" type="rotate" dur="3.0303030303030303s" repeatCount="indefinite" values="0 50 -120;90 50 -120" keyTimes="0;1"></animateTransform>
-          </rect>
-        
-        </g>
-        </svg>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVify</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.8.0/css/perfect-scrollbar.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.8.0/js/perfect-scrollbar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.8.0/js/perfect-scrollbar.jquery.js"></script>
+    <script src="/main.js"></script>
+</head>
+<body>
+    <div class="video-trailer">
+            <div class="close-trailer"><i class="material-icons">close</i></div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Blaze TV</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="LanguageFilter" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Languages
-              </a>
-              <ul id="Languages" class="dropdown-menu" aria-labelledby="LanguageFilter"></ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="CountryFilter" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Countries
-              </a>
-              <ul id="Countries" class="dropdown-menu" aria-labelledby="CountryFilter"></ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="CategoryFilter" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Categories
-              </a>
-              <ul id="Categories" class="dropdown-menu" aria-labelledby="CategoryFilter"></ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/nafis-sadik/ST-TV" target="_blank">Github</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <section id="MediaPlayerSection" class="container-fluid">
-      <div class="row">
-        <div class="col-md-1">
-          <img src="" class="logo " alt="">
-        </div>
-        <h2 id="Heading">Blaze TV</h2>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
-          <video id=MediaPlayer class="video-js" controls poster=""></video>
-          <button id="Play" type="button" class="btn btn-dark" style="width: 100%;">Play Random Channel</button>
-        </div>
-        <div class="col-md-4" id="ChannelContainer"></div>
-      </div>
-    </section>
-    <div>
-        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    <header>
+      <nav>
+        <ul class="navbar">
+          <li id='search-link' data-activities="search">      
+            <i class="material-icons" >search</i>
+          </li>
+          <li data-activities="airplay">      
+            <i class="material-icons" >airplay</i>
+          </li>
+          <li class="disabled" id="trailer" data-activities="trailer">      
+            <i class="material-icons" >play_arrow</i>
+          </li>
+          <li data-activities="refresh">      
+            <i class="material-icons" >refresh</i>          
+          </li>
+          <li class="disabled" data-activities="list">      
+            <i class="material-icons" >list</i>
+          </li>
+          <li class="disabled" data-activities="favorites">      
+            <i class="material-icons" >whatshot</i>
+          </li>
+          <li id="back" data-activities="back" class="disabled">      
+            <i class="material-icons" >arrow_back
+          </i>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="app">
+      <div class="had-container">
+        <div class="row">
+<div id="modal1" class="modal">           <div class="modal-content">
+      <h4>Modal Header</h4>
+      <p>A bunch of text</p>
     </div>
-    <script type="module" src="./main.js"></script>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+          </div>
+                      <div class="col s12 menu-section">
+                        <div id="search" class="search col s6 offset-s3 valign-wrapper">
+                <form>
+                  <input type="text" placeholder="Buscar Peli">
+                  <button type="submit" name="btn">
+                    <i class="material-icons">search</i>
+                  </button>
+                </form>
+            </div>
+            <div class="close"><i class="material-icons">close</i></div>
+
+                    </div>
+
+
+    
+          
+          <div class="col s12 m9 l10 main">
+            <div class="main-head col s12">
+              <div class="col head-logo">
+                <h3>TViFY</h3>
+              </div>
+              <div class="col head-info hide-on-med-and-down">
+                <ul class="valign-wrapper">
+                  <li>
+                    <i class="material-icons">airplay</i>
+                      Film Information
+                  </li>
+                    <li>
+                      <i class="material-icons">show_chart</i>
+                      Pulse
+                  </li>
+                   <li>
+                    <i class="material-icons">remove_red_eye</i>
+                     Prime Streaming
+                  </li>
+                </ul>
+              </div>
+              <div class="head-config right-align">
+                <ul class="valign-wrapper right">
+                  <li>
+                    <i class="material-icons">sync</i>
+                  </li>
+                    <li>
+                      <i class="material-icons">settings</i>
+                  </li>
+                   <li>
+                    <i class="material-icons">remove_red_eye</i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col s12 movie-view">
+              <div class="shadow"></div>
+
+            </div>
+            <div class="main-watchlist col s12">
+              <div class="watchlist-head">
+                <div class="col s3 watchlist-title">
+                  <p>Watchlist</p>
+                </div>
+                <div class="col s9 watchtlist-movie-tv right-align">
+                  <ul class="valign-wrapper">
+                    <li>Movie</li>
+                    <li>Tv</li>
+                  </ul>
+                </div>
+              </div>
+              <div id="main" class="watchlist-list">
+                <div class="col s12 load">
+                  <div class="col s4 offset-s4 spinner">
+                </div>
+              </div>
+              <div id="watchlist" class="col s12 watchlist"></div>
+
+              </div>
+            </div>
+          </div>
+          <div class="col m3 l2 hide-on-small-only upcoming">
+            <div class="col s12 upcoming-head valign-wrapper">
+              <h6 class="center">UPCOMING</h6>
+            </div>
+            <div class="col s12 upcoming-list">
+              <ul>
+                <li>
+
+                </li>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

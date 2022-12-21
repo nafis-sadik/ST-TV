@@ -1,245 +1,262 @@
-import M3U8FileParser from 'm3u8-file-parser'
-
-
-var PlayList = [];
-
-var player = videojs('MediaPlayer');
-player.aspectRatio('16:9');
-player.responsive(true);
-
-$('document').ready(() => {
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/business.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/auto.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/entertainment.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/fashion.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/news.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/music.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/religious.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/sport.m3u');
-
-  GeneratePlaylist([
-    { source: 'https://iptv-org.github.io/iptv/categories/documentary.m3u', classification: 'cat', specificName: '' },
-    { source: 'https://iptv-org.github.io/iptv/countries/bd.m3u', classification: 'cn', specificName: 'Bangladesh' },
-    { source: 'https://iptv-org.github.io/iptv/index.country.m3u', classification: 'cn', specificName: '' },
-    { source: 'https://iptv-org.github.io/iptv/index.category.m3u', classification: 'cat', specificName: '' },
-    { source: 'https://iptv-org.github.io/iptv/index.language.m3u', classification: 'ln', specificName: '' }
-  ]);
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/comedy.m3u');
-
-  // loadDataFromPlaylist('https://iptv-org.github.io/iptv/categories/history.m3u', '.');
-  
-  $('#MediaPlayer').addClass('vjs-theme-city');
-});
-
-const SetChannelFeed = (channelFeedUrl, posterUrl, channelTitle) => {
-  player.src({
-      src: channelFeedUrl,
-      type: 'application/x-mpegURL',
-      poster: posterUrl,
-      autoplay: false,
-      controls: true,
-      paused: true,
-      preload: false
-  });
-  
-  player.play();
-
-  $('#Heading').text("Now Playing : " + channelTitle);
-  
-  $('.logo').attr('src', posterUrl.toString());
-}
-
-var SysPlaylist = {
-  Categories: [],
-  Countries: [],
-  Language: [],
-  PlayList: []
-};
-
-const GeneratePlaylist = (sources) => {
-  sources.forEach(element => {
-     loadDataFromPlaylist(element.source, element.classification, element.specificName);
-  });
-  
-  init();
-
-  console.log(SysPlaylist)
-}
-
-const loadDataFromPlaylist = (url, category, specificName) => {
-  $.ajax({
-    url: url,
-    method: 'GET',
-    async: false,
-    success: (data) => {
-      let reader = new M3U8FileParser();
-      reader.result.isExtendedM3U = true;
-      reader.read(data);
-      data = reader.getResult();
-      data.segments.forEach((item) => {
-        // Handling special characters
-        if(item.inf.groupTitle.includes(';')){
-          item.inf.groupTitle = item.inf.groupTitle.replaceAll(';', ' / ');
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+    'use strict';
+    
+    $(function () {
+    
+      $('.main-watchlist').perfectScrollbar();
+      var tvShows = $('#main').find('.watchlist');
+    
+      tvShows.hide();
+    
+      var key = '6459fcd631e69317f25758b82f77615d';
+      var img_key = 'https://image.tmdb.org/t/p/w500';
+    
+      var template = '\n    <div class="col s10 push-s1 m6 l3 movie" data-id=":id:">\n        <div class="datas">\n            <img class="center responsive-img" src=":img:" alt=":img alt:">\n            <div class="data-info">\n            <div class="category">MOVIE</div>\n            <div class="movie-title">:name:</div>\n            <div class="like">\n                <i class="material-icons">thumb_up</i>\n                :likes: Likes\n                </div>\n            </div>\n            <div class="play circle scale-transition">\n                <i class="material-icons">play_arrow</i>\n            </div>\n        </div>\n    </div>';
+    
+      function renderShow(shows) {
+        $('.load').fadeOut(1000);
+        shows.forEach(function (show, i) {
+          col = template.replace(':name:', show.title ? show.title : '').replace(':id:', show.id ? show.id : '').replace(':img:', show.poster_path ? img_key + show.poster_path : 'images/no-image.jpg').replace(':img alt:', show.name ? show.name + " Logo" : '').replace(':country:', show.network ? show.network.country.name : '').replace(':likes:', show.vote_count ? show.vote_count : '');
+    
+          var col = $(col);
+          tvShows.append(col);
+        });
+        tvShows.delay(1500).fadeIn(1000);
+        $('.movie').click(function () {
+          $('#back').removeClass('disabled');
+          $('#trailer').removeClass('disabled');
+          $('.movie-view').hide();
+          $('.movie-view-list').remove();
+          var templateMovie = '\n        <div class="movie-view-list" data-id=":id:">\n          <div class="col s12 movie-view-title">\n            <small>MOVIES</small>\n            <h1>:title:</h1>\n          </div>\n          <div class="col s12 valign-wrapper popularity">\n            <div class="col s12 m4 l2 stars">\n                <i id="star1" class="material-icons ">star</i>\n                <i id="star2" class="material-icons">star</i>\n                <i id="star3" class="material-icons">star</i>\n                <i id="star4" class="material-icons">star</i>\n                <i id="star5" class="material-icons">star</i>\n            </div>\n            <div class="col s12 m10 movie-view-like">\n              <i class="material-icons">thumb_up</i> :likes: Likes\n            </div>\n          </div>\n          <div class="col s12 divider"></div>\n          <div class="col s10 m8 l6 geners">\n            <ul>\n            </ul>\n          </div>\n          <div class="col s2 m4 l6 right-align trailer">\n            <div class="trailer-play circle">\n              <i class="material-icons">play_arrow</i>\n            </div>\n          </div>\n        </div>';
+    
+          var id = $(this).attr('data-id');
+          $.ajax({
+            "async": true,
+            "crossDomain": true,
+            "url": 'https://api.themoviedb.org/3/movie/' + id + '?api_key=' + key + '&language=en-US',
+            "method": "GET",
+            "headers": {},
+            "data": "{}"
+          }).then(function (show) {
+            var average = Math.round(show.vote_average * 5 / 10);
+            var gener = show.genres;
+    
+            $('.movie-view').css('background-image', 'url(https://image.tmdb.org/t/p/w1280' + show.backdrop_path + ')');
+    
+            col = templateMovie.replace(':title:', show.title ? show.title : '').replace(':id:', show.id ? show.id : '').replace(':likes:', show.vote_count ? show.vote_count : '');
+    
+            var col = col;
+            $('.movie-view').append(col);
+    
+            for (var i = 0; i <= average; i++) {
+              var star = '#star' + i;
+              $('.stars').children(star).addClass('star-active');
+            }
+            gener.forEach(function (gener) {
+              $('.geners ul').append('<li>' + gener.name + '</li>');
+            });
+    
+            $('.main-watchlist').fadeOut(1000);
+            $('.movie-view').delay(1000).fadeIn(1000);
+            $('.trailer-play').click(function () {
+    
+              playTrailer();
+            });
+          });
+        });
+      }
+    
+      function loadMovies() {
+        var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": 'https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=' + key,
+          "method": "GET",
+          "headers": {},
+          "data": "{}"
+        };
+        if (!localStorage.shows) {
+          $.ajax(settings).then(function (shows) {
+    
+            localStorage.shows = JSON.stringify(shows.results);
+            renderShow(shows.results);
+          });
+        } else {
+          renderShow(JSON.parse(localStorage.shows));
         }
-  
-        // Country is selected
-        if(category == 'cn'){
-          // If country name is not previouslly registered, register now
-          if(specificName == ''){
-            if(!SysPlaylist.Countries.includes(item.inf.groupTitle)){
-              SysPlaylist.Countries.push(item.inf.groupTitle);
+      }
+      function playTrailer() {
+        var breakVideo = false;
+        var id = $('.movie-view-list').attr('data-id');
+        var videoTemplate = '       \n        <div class="video-responsive">\n          <iframe src="https://www.youtube.com/embed/:video:?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>\n        </div>';
+        $.ajax({
+          "async": true,
+          "crossDomain": true,
+          "url": 'https://api.themoviedb.org/3/movie/' + id + '/videos?api_key=6459fcd631e69317f25758b82f77615d&language=en-US',
+          "method": "GET",
+          "headers": {},
+          "data": "{}"
+        }).then(function (show) {
+          videos = show.results;
+          videos.forEach(function (a) {
+            if (a.site === "YouTube") {
+    
+              if (a.type === "Trailer" && breakVideo === false) {
+    
+                console.log(a.key);
+                col = videoTemplate.replace(':video:', a.key);
+    
+                breakVideo = true;
+              }
             }
-          }else{
-            if(!SysPlaylist.Countries.includes(specificName)){
-              SysPlaylist.Countries.push(specificName);
+          });
+    
+          var col = $(col);
+          $('.video-trailer').append(col).fadeIn(1000);
+          $('.close-trailer').click(function () {
+            $('.video-responsive').fadeOut(1000).delay(1000).remove();
+            $('.video-trailer').fadeOut(1000);
+          });
+        });
+      }
+      $('#search').find('form').submit(function (ev) {
+        ev.preventDefault();
+        var search = $(this).find('input[type="text"]').val();
+        searchMovie(search);
+      });
+    
+      function searchMovie(search) {
+    
+        tvShows.find('.movie').remove();
+        $('.load').show();
+        $.ajax({
+          url: 'https://api.themoviedb.org/3/search/movie?api_key=' + key + '&language=en-US&query=' + search + '&include_adult=false',
+          data: {},
+          success: function success(res, textStatus, xhr) {
+            if (res.results.length > 0) {
+              var shows = res.results.map(function (show) {
+                return show;
+              });
+              renderShow(shows);
+            } else {
+              tvShows.append('<h4>No hay resultados para <spam>' + search + '</spam></h4>');
+              $('.load').fadeOut();
             }
+            $('.main-watchlist').scrollTop(0);
+            closeMenu();
+          }
+        });
+      }
+    
+      //Cargar zona de peliculas de Upcoming
+      function loadUpcoming() {
+        var upcommingSettings = {
+          "async": true,
+          "crossDomain": true,
+          "url": 'https://api.themoviedb.org/3/movie/upcoming?api_key=' + key + '&language=en-US&page=1',
+          "method": "GET",
+          "headers": {},
+          "data": "{}"
+        };
+        var upcoming = $('.upcoming-list ul li');
+        $.ajax(upcommingSettings).then(function (shows) {
+          var upcomingTemplate = '\n                <div class="col m12 upcoming-movie">\n                  <img class="center responsive-img" src=":img:" alt=":img alt:">\n                </div>';
+          var show = shows.results;
+          for (var i = 0; i < 3; i++) {
+            col = upcomingTemplate.replace(':img:', show[i].poster_path ? img_key + show[i].poster_path : '').replace(':img alt:', show[i].name ? show[i].name + " Logo" : '');
+            var col = $(col);
+            upcoming.append(col);
+          }
+        });
+      }
+    
+      //comprobar si los link del menu estan presionados o no
+      function enableMenu(e) {
+        if ($(e).hasClass('active-menu')) {
+          $(e).removeClass('active-menu');
+          return false;
+        } else {
+          $(e).addClass('active-menu');
+          return true;
+        }
+      }
+      //Cierra el menu de busqueda
+    
+      function closeMenu() {
+        $('.menu-section').fadeOut(); //desaparece el menu
+        enableMenu($('#search-link')); //poner al link en su estado original
+        alert();
+      }
+    
+      $('.navbar li').click(function (e) {
+    
+        if ($(this).attr('data-activities') === 'back') {
+          $('#back').addClass('disabled');
+          $('#trailer').addClass('disabled');
+    
+          $('.main').css('background-image', 'none');
+          $('.main').find('.movie-view-list').remove();
+          $('.movie-view').hide();
+          $('.main-watchlist').fadeIn();
+          $('.head-info').fadeIn();
+        }
+        if ($(this).attr('data-activities') === 'search') {
+          if (enableMenu(this) === true) {
+            $('.menu-section').fadeIn();
+          } else {
+            closeMenu();
           }
         }
-  
-        // Category is selected
-        else if(category == 'cat'){
-          // If category name is not previouslly registered, register now
-          if(specificName == ''){
-            if(!SysPlaylist.Categories.includes(item.inf.groupTitle)){
-              SysPlaylist.Categories.push(item.inf.groupTitle);
-            }
-          }else{
-            if(!SysPlaylist.Categories.includes(specificName)){
-              SysPlaylist.Categories.push(specificName);
-            }
-          }
+        if ($(this).attr('data-activities') === 'trailer') {
+          playTrailer();
         }
-        // Language is selected
-        else if(category == 'ln'){
-          // If category name is not previouslly registered, register now
-          if(specificName == ''){
-            if(!SysPlaylist.Language.includes(item.inf.groupTitle)){
-              SysPlaylist.Language.push(item.inf.groupTitle);
-            }
-          }else{
-            if(!SysPlaylist.Language.includes(specificName)){
-              SysPlaylist.Language.push(specificName);
-            }
-          }
-        }  
-        else{
-          console.log('Playlist type not selected');
-          console.log(item.inf.groupTitle);
+    
+        if ($(this).attr('data-activities') === 'refresh') {
+          location.reload();
         }
-  
-        // If channel not previously registered, register now
-        if(!SysPlaylist.PlayList.includes(item.inf)){
-          SysPlaylist.PlayList.push(item.inf);
+    
+        if ($(this).attr('data-activities') === 'airplay') {
+          if (enableMenu(this)) {
+            launchIntoFullscreen(document.documentElement); // the whole page
+          } else {
+            exitFullscreen();
+          }
         }
       });
-    }
-  });
-}
-
-const init = () => {
-  SysPlaylist.Countries.forEach((country) => {
-    $('#Countries').append('<li><a class="dropdown-item" href="#">' + country + '</a></li>');
-  });
-
-  SysPlaylist.Categories.forEach((category) => {
-    $('#Categories').append('<li><a class="dropdown-item" href="#">' + category + '</a></li>');
-  });
-
-  SysPlaylist.Language.forEach((category) => {
-    $('#Languages').append('<li><a class="dropdown-item" href="#">' + category + '</a></li>');
-  });
-  
-  $('#LoadingScreen').removeClass('d-none');
-}
-
-$('#Play').click(() => {
-  SetChannelFeed(PlayList[Math.floor(Math.random() * (PlayList.length-1))].url, 'http://localhost:3000/img/pexels-lisa-1444416.jpg');
-})
-
-let loadChannelsOnUI = (ln, cn, cat) => {
-  $('#ChannelContainer').empty();
-  if(ln != undefined){
-    SysPlaylist.Language.forEach((item) => {
-      if(item.inf.tvgLanguage.toLowerCase().trim() == ln.toLowerCase().trim()){
-        let template = 
-          '<div class="card channel" style="width: 18rem;">'
-            + '<img src="' + item.inf.tvgLogo + '" class="card-img-top" alt=' + item.inf.title + '>'
-            + '<div class="card-body">'
-              + '<h4>' + item.inf.title + '</h4>'
-              + '<h6> Country : ' + item.inf.tvgCountry + '</h6>'
-              + '<h6> Category : ' + item.inf.groupTitle + '</h6>'
-              + '<h6> Language : ' + item.inf.tvgLanguage + '</h6>'
-              + '<input value=' + item.url + '  class="visually-hidden">'
-              + '<input value=' + item.inf.tvgLogo + '  class="visually-hidden">'
-              + '<input value=' + item.inf.title + '  class="visually-hidden">'
-            +'</div>';
-          +'</div>';
-        $('#ChannelContainer').append(template);
+    
+      $('.close').click(function closeSearch() {
+        closeMenu();
+      });
+    
+      // Lanza full screen
+      function launchIntoFullscreen(element) {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
       }
-    });
-  }
-  if(cn != undefined){
-    PlayList.forEach((item) => {
-      if(item.inf.tvgCountry.toLowerCase().trim() == cn.toLowerCase().trim()){
-        let template = 
-          '<div class="card channel" style="width: 18rem;">'
-            + '<img src="' + item.inf.tvgLogo + '" class="card-img-top" alt=' + item.inf.title + '>'
-            + '<div class="card-body">'
-              + '<h4>' + item.inf.title + '</h4>'
-              + '<h6> Country : ' + item.inf.tvgCountry + '</h6>'
-              + '<h6> Category : ' + item.inf.groupTitle + '</h6>'
-              + '<h6> Language : ' + item.inf.tvgLanguage + '</h6>'
-              + '<input value=' + item.url + '  class="visually-hidden">'
-              + '<input value=' + item.inf.tvgLogo + '  class="visually-hidden">'
-              + '<input value=' + item.inf.title + '  class="visually-hidden">'
-            +'</div>';
-          +'</div>';
-        $('#ChannelContainer').append(template);
+      // Cancela full screen
+      function exitFullscreen() {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
       }
+    
+      loadMovies();
+      loadUpcoming();
     });
-  }
-  if(cat != undefined){
-    PlayList.forEach((item) => {
-      if(item.inf.groupTitle.toLowerCase().trim() == cat.toLowerCase().trim()){
-        let template = 
-          '<div class="card channel" style="width: 18rem;">'
-            + '<img src="' + item.inf.tvgLogo + '" class="card-img-top" alt=' + item.inf.title + '>'
-            + '<div class="card-body">'
-              + '<h4>' + item.inf.title + '</h4>'
-              + '<h6> Country : ' + item.inf.tvgCountry + '</h6>'
-              + '<h6> Category : ' + item.inf.groupTitle + '</h6>'
-              + '<h6> Language : ' + item.inf.tvgLanguage + '</h6>'
-              + '<input value=' + item.url + '  class="visually-hidden">'
-              + '<input value=' + item.inf.tvgLogo + '  class="visually-hidden">'
-              + '<input value=' + item.inf.title + '  class="visually-hidden">'
-            +'</div>';
-          +'</div>';
-        $('#ChannelContainer').append(template);
-      }
-    });
-  }
-}
+    
+    },{}]},{},[1]);
 
-$(document).on('click', '#Languages li a', (elem) => {
-  loadChannelsOnUI($(elem.target).html(), undefined, undefined);
-});
 
-$(document).on('click', '#Countries li a', (elem) => {
-  loadChannelsOnUI(undefined, $(elem.target).html(), undefined);
-});
 
-$(document).on('click', '#Categories li a', (elem) => {
-  loadChannelsOnUI(undefined, undefined, $(elem.target).html());
-});
-
-$(document).on('click', '#ChannelContainer .card', function(item) {
-  SetChannelFeed($($($($(item)[0].currentTarget).children()[1]).children()[4]).val(), $($($($(item)[0].currentTarget).children()[1]).children()[5]).val(), $($($($(item)[0].currentTarget).children()[1]).children()[6]).val());
-}); 
+    // https://codepen.io/eherna40/pen/oeKawg?editors=1000
